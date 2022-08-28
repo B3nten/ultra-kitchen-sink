@@ -24,6 +24,11 @@ const helmetContext: Record<string, any> = {}
 //react-router
 import { StaticRouter } from 'react-router-dom/server'
 
+//wouter
+import { Router } from 'wouter'
+import staticLocationHook from 'wouter/static-location'
+import { SearchParamsProvider } from "./SearchParams.tsx";
+
 const server = await createServer({
 	importMapPath: import.meta.resolve('./importMap.json'),
 	browserEntrypoint: import.meta.resolve('./client.tsx'),
@@ -43,14 +48,18 @@ function ServerApp({ context }: { context: any }) {
 			</>
 		)
 	})
-
+	const requestUrl = new URL(context.req.url)
 	return (
 		<HelmetProvider context={helmetContext}>
 			<QueryClientProvider client={queryClient}>
 				<StitchesProvider>
 					<TwindProvider>
-						<StaticRouter location={new URL(context.req.url).pathname}>
-							<App />
+						<StaticRouter location={requestUrl.pathname}>
+							<Router hook={staticLocationHook(requestUrl.pathname)}>
+								<SearchParamsProvider value={requestUrl.searchParams}>
+									<App />
+								</SearchParamsProvider>
+							</Router>
 						</StaticRouter>
 					</TwindProvider>
 				</StitchesProvider>

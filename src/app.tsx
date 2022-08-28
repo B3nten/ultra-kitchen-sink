@@ -12,6 +12,7 @@ import { Helmet } from 'react-helmet-async'
 
 //react-router
 import { Route, Routes, Link } from 'react-router-dom'
+import { Switch, Route as WouterRoute, Link as WouterLink } from 'wouter'
 
 const EmotionDiv = emotion.div`
   color: blue;
@@ -65,6 +66,18 @@ export default function App() {
 							}
 						/>
 					</Routes>
+					<Switch>
+						<WouterRoute path='/'>
+							<div>
+								Wouter home <WouterLink href='/wouter'>to other page</WouterLink>
+							</div>
+						</WouterRoute>
+						<WouterRoute path='/wouter'>
+							<div>
+								Wouter other page <WouterLink href='/'>to wouter home</WouterLink>
+							</div>
+						</WouterRoute>
+					</Switch>
 				</Suspense>
 			</body>
 		</html>
